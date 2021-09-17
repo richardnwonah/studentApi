@@ -11,6 +11,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using studentApi.Models;
+using Microsoft.EntityFrameworkCore;
+using  Microsoft.EntityFrameworkCore.Design;
+
 
 namespace studentApi
 {
@@ -26,7 +30,8 @@ namespace studentApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            string connectionString = Configuration.GetConnectionString("DefaultConnection");
+            services.AddDbContext<StudentContext>(opt => opt.UseSqlServer(connectionString));
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
