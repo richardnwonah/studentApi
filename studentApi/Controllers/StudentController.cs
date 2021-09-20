@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using studentApi.Models;
-
+using System.Threading.Tasks;
 
 namespace studentApi.Controllers
 {
@@ -17,7 +17,7 @@ namespace studentApi.Controllers
             _studentContext = context;
         }
         //GET api/values
-        [HttpGet]
+        [HttpGet("get_all_student")]
         public ActionResult<IEnumerable<Student>> Get()
         {
             return _studentContext.Students.ToList();
@@ -35,6 +35,19 @@ namespace studentApi.Controllers
             {
                 return NotFound("Student not found");
             }
+            return Ok(student);
+        }
+        [HttpPost]
+        public async Task<ActionResult> Post([FromBody]Student student)
+        {
+            if(student == null){
+                return NotFound("Student data not supplied");
+            }
+            if(!ModelState.IsValid){
+                return BadRequest(ModelState);
+            }
+            await _studentContext.Students.AddAsync(student);
+            await _studentContext.SaveChangesAsync();
             return Ok(student);
         }
         ~StudentController()
